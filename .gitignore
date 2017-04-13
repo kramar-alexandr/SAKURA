@@ -1,4 +1,5 @@
-*
-!halcust/
+/*
+/*/
 !webcust/
 webcust/dr_valid/photo/*
+!halcust/
