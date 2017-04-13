@@ -1,0 +1,46 @@
+SourceFile("halcust\\halpatch",0);
+SourceFile("halcust\\Import",0);
+SourceFile("halcust\\Report",0);
+SourceFile("halcust\\RemoteWA",0);
+SourceFile("halcust\\Windows",0);
+SourceFile("halcust\\WAction",0);
+SourceFile("halcust\\RAction",0);
+SourceFile("halcust\\Web",0);
+
+
+begin
+
+  RecordAddBegin(RentResVc,"RentResVc_Custom");
+    RecordField(CarStatusDispatched,M4Str,30,0);
+    RecordField(CarStatusReturned,M4Str,30,0);
+    RecordField(StartMileage,M4UVal,0,0);
+    RecordField(EndMileage,M4UVal,0,0);
+    RecordField(DiffMileage,M4UVal,0,0);
+    RecordField(UberMileage,M4UVal,0,0);
+    RecordField(OverMileage,M4UVal,0,0);
+    RecordField(KMCostNoBonus,M4UVal,0,0);
+    RecordField(KMCostWithBonus,M4UVal,0,0);
+    RecordField(TotCostFuel,M4UVal,0,0);
+    RecordField(CashboxLast,M4UVal,0,0);
+    RecordField(CashboxCurrent,M4UVal,0,0);
+    RecordField(CashboxTot,M4UVal,0,0);
+    RecordField(BonusLast,M4UVal,0,0);
+    RecordField(BonusCurrent,M4UVal,0,0);
+    RecordField(BonusTot,M4UVal,0,0);
+    RecordField(CashLast,M4UVal,0,0);
+    RecordField(CashCurrent,M4UVal,0,0);
+    RecordField(CashTot,M4UVal,0,0);
+    RecordField(CashboxForPay,M4UVal,0,0);
+    RecordField(CashForDriver,M4UVal,0,0);
+    RecordField(DriverFeedback,M4Str,0,0); 
+    RecordField(CarDispatchedTime,M4Time,0,0);
+    RecordField(CarReturnedTime,M4Time,0,0);
+  EndRecordAdd;
+  
+  RecordAddBegin(CUVc,"CUVc_Custom");
+    RecordField(DriverType,M4Int,0,0);
+  EndRecordAdd;
+
+return;
+end;
+

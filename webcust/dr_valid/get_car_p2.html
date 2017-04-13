@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="dr_valid/">
+    <title>Взять машину</title>
+    <link rel="stylesheet" media="screen" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/jquery.signaturepad.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/numeric-1.2.6.min.js"></script>
+    <script src="js/bezier.js"></script>
+    <script src="js/jquery.signaturepad.js"></script>
+    <script src="js/json2.min.js"></script>
+    <script src="js/custom_tools.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        //initialize signaturepad
+        $('#smoothed').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:200});
+
+        //set an image into signaturepad output
+        $('#get_automobile_form').submit(function() {
+          $('#signature')[0].value = $('.sigPad').signaturePad().getSignatureImage();
+          return true;
+        });
+
+        //retrieve parameters from url string
+        var QueryString = RetrieveGetParameters();
+        if (QueryString["driver_code"].length>0)
+          {
+            $('#firstname')[0].value = QueryString["driver_code"];
+            $('#driver_hansa_code')[0].value = QueryString["driver_code"];
+          }
+
+        //@putdatatoformscript
+      });
+    </script>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <!--a class="navbar-brand" href="/WebCheckRef.hal?arg=main">Главная</a-->
+          </div>
+          <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active label-nav-font"><a href="/dr_valid/get_car_p1.html">Взять машину</a></li>
+                <li class="label-nav-font"><a href="/dr_valid/return_car_p1.html">Сдать машину</a></li>
+                <li class="label-nav-font"><a href="/dr_valid/add_driver.html">Создать нового водителя</a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+  <p style="margin-bottom: 100px"></p>
+  <div class="container">
+    <form name="get_automobile_form" id="get_automobile_form" autocomplete="off" action="../WebHandleDataFromDriver.hal?action=dispatch" method="post" enctype="text/plain">
+      <fieldset class="form-group form-group-lg">
+        <img id="driverphoto" src="//@DriverPhoto" alt="Фото отсутствует" width="100%">
+        <legend class="label-default">Информация по водителю</legend>
+          <input type="hidden" id="driver_hansa_code" name="driver_hansa_code" readonly/><br>
+          <label class="label-default col-md-12" for="firstname">Имя</label>
+          <input class="form-control" id="firstname" name="firstname" readonly/><br>
+          <label class="label-default col-md-12" for="lastname">Фамилия</label>
+          <input class="form-control" name="lastname" id="lastname" readonly/><br>
+      </fieldset>
+      <p style="margin-bottom: 100px"></p>
+      <fieldset class="form-group form-group-lg">
+        <legend class="label-default">Данные автомобиля</legend>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="reg_number">Госномер авто</label>
+            <input class="form-control" id="reg_number" name="reg_number" readonly/><br>
+            <label class="label-default col-md-12" for="car_status">Статус авто</label>
+            <select class="form-control" name="car_status" id="car_status">
+              <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
+              <option value="in_work">В работе</option>
+              <option value="no_crew">Нет экипажа</option>
+              <option value="no_shift">Нет сменщика</option>
+              <option value="long_term_service">Длительный сервис</option>
+              <option value="crash_firm_repair">ДТП чиним сами</option>
+              <option value="crash_own_repair">ДТП чиним за свой счет</option>
+            </select><br><br>
+            <label class="label-default col-md-12" for="start_mileage">Начальный пробег</label>
+            <input type="number" class="form-control" name="start_mileage" id="start_mileage"/><br>
+          </div>
+      </fieldset>
+      <fieldset class="form-group">
+        <div class="sigPad" id="smoothed" style="width:404px;">
+          <ul class="sigNav">
+            <h2>Подпись</h2>
+            <input class="clearButton btn btn-primary form-control" type="button" value="Очистить"/>
+          </ul>
+          <div class="sigWrapper" style="height:auto; margin-top:10px;">
+            <div class="typed"></div>
+            <canvas class="pad" width="400" height="300"></canvas>
+            <input type="hidden" id="signature" name="signature" class="output"/>
+          </div>
+        </div>
+      </fieldset>
+      <div class="text-center">
+        <p style="margin-top: 100px;"></p>
+        <p><input id ="get_automobile_form_submit" class="btn btn-primary btn-lg" type="button" value="Взять"/></p>
+        <p style="margin-top: 100px;"></p>
+      </div>
+    </form>
+  </div>
+  <!--@includemodalwindow-->
+  <script>
+    var modalName = '#confirmFormModal';
+    //  $('#get_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
+
+    //Set handler for form button
+    $('#get_automobile_form_submit').click(function()
+    {
+      if(+$('#start_mileage')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#start_mileage').offset().top - 150});
+        $('#start_mileage').focus();
+        return;
+      }
+
+      if($(".sigPad").signaturePad().validateForm()==false)
+      {
+        $('.sigPad').find(".error")[0].textContent = "Пожалуйста, подпишите документ";
+        $('html,body').animate({scrollTop: $('#smoothed').offset().top});
+        return;
+      }
+      $(modalName).modal('show');
+    });
+
+    $(modalName)[0].Modal_confirm_func(function () {
+      if($(modalName)[0].Password_field_is_empty()===false)
+      {
+       var xhr = new XMLHttpRequest();
+       function reqReadyStateChange() {
+         if (xhr.readyState == 4 && xhr.status == 200) {
+           if (xhr.responseText=="confirmed") {
+             $(modalName).modal('hide');
+             $('#get_automobile_form').submit();
+           }
+         }
+       }
+       xhr.onreadystatechange = reqReadyStateChange;
+       xhr.open("POST", location.protocol + "//" + location.host + "/WebCheckValidatorPassword.hal", true);
+       xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+       var data = {};
+       data.p = $("#password_field")[0].value;
+       var json = JSON.stringify(data);
+       xhr.send(json);
+      }
+      else {
+        $(modalName)[0].Focus_password_field();
+      }
+    });
+  </script>
+
+</body>
+</html>

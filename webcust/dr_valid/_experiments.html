@@ -1,0 +1,50 @@
+<div id="confirmFormModalContainer"></div>
+<script>
+  //load modal window components, attach it to form button and define modal window confirm function
+  // $("#confirmFormModalContainer").load("confirm_form_modal.html", function(){
+  //   var modalName = '#confirmFormModal';
+  //   $('#return_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
+  //   $(modalName)[0].Modal_confirm_func(function () {
+  //   });
+  // });
+  var con = document.getElementById('confirmFormModalContainer');
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function (e) {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      //$('#confirmFormModalContainer').html(xhr.responseText);
+      con.innerHTML = xhr.responseText;
+      var reponse = $(xhr.responseText);
+      var reponseScript = reponse.filter("script");
+      $.each(reponseScript, function(idx, val) { (new Function('', val.text))();} );
+      var modalName = '#confirmFormModal';
+      //  $('#return_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
+
+      //Set handler for form button
+      $('#return_automobile_form_submit').click(function()
+      {
+        if(+$('#start_mileage')[0].value<=0)
+        {
+          $('html,body').animate({scrollTop: $('#start_mileage').offset().top - 150});
+          $('#start_mileage').focus();
+          return;
+        }
+        $(modalName).modal('show');
+      });
+
+      $(modalName)[0].Modal_confirm_func(function () {
+        if($(modalName)[0].Password_field_is_empty()===false)
+         {
+           //checkpassword
+           $(modalName).modal('hide');
+           $('#return_automobile_form').submit();
+         }
+        else {
+         $(modalName)[0].Focus_password_field();
+        }
+      });
+    }
+  }
+  xhr.open("GET", "confirmFormModal.html", true);
+  xhr.setRequestHeader('Content-type', 'text/html');
+  xhr.send();
+</script>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Создать нового водителя</title>
+    <link rel="stylesheet" media="screen" href="css/bootstrap.css">
+    <script src="js/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        // $('#add_driver_form').bind('submit', function () { console.log("custom submit"); return false});
+      });
+    </script>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <!-- a class="navbar-brand" href="/WebCheckRef.hal?arg=main">Главная</a -->
+          </div>
+          <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="label-nav-font"><a href="/dr_valid/get_car_p1.html">Взять машину</a></li>
+                <li class="label-nav-font"><a href="/dr_valid/return_car_p1.html">Сдать машину</a></li>
+                <li class="active label-nav-font" class="active label-30"><a href="/dr_valid/add_driver.html">Создать нового водителя</a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+  <p style="margin-bottom: 100px"></p>
+  <div class="container">
+    <form name="add_driver_form" id="add_driver_form" autocomplete="off" action="../WebValidateDriver.hal" method="post" enctype="text/plain">
+      <fieldset class="form-group form-group-lg">
+        <!--img id="driverphoto" src="photo/Anonymous_Icon.jpg" alt="Фото" width="100%"-->
+        <legend class="label-default">Контактная информация</legend>
+            <label class="label-default col-md-12" for="firstname">Имя</label>
+            <input class="form-control" id="firstname" name="firstname"><br>
+            <label class="label-default col-md-12" for="lastname">Фамилия</label>
+            <input class="form-control" name="lastname" id="lastname"><br>
+            <label class="label-default col-md-12" for="telephone">Телефон</label>
+            <input class="form-control" name="phone" id="telephone" placeholder="+38(0XX)XXX-XX-XX"><br>
+      </fieldset>
+      <fieldset class="form-group form-group-lg">
+        <legend class="label-default">Персональная информация</legend>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="datebirth">Дата рождения</label>
+            <input class="form-control" type="date" name="datebirth" id="datebirth"><br>
+          </div>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="gender">Пол</label>
+            <select class="form-control" name="gender" id="gender">
+              <option value="male">Мужчина</option>
+              <option value="female">Женщина</option>
+            </select><br>
+          </div>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="comments">Личные качества</label>
+            <textarea class="form-control" name="comments" id="comments"></textarea>
+          </div>
+      </fieldset>
+      <p style="margin-bottom: 100px"></p>
+      <div class="text-center">
+        <p style="margin-top: 100px;"></p>
+        <p><input class="btn btn-primary btn-lg" type="submit" value="Создать"></p>
+        <p style="margin-top: 100px;"></p>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

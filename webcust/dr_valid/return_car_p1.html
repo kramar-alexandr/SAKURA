@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Выбор водителя</title>
+    <link rel="stylesheet" media="screen" href="css/bootstrap.css">
+    <script src="js/jquery.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#return_car_spec_form').submit(function() {
+          var code = $('#driver_code').val();
+          if (code=='blankvalue' || code==null)
+          {
+            alert("Выберите код");
+            return false;
+          }
+          return true;
+        });
+      });
+
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function (e) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var driverList = xhr.responseText.split(String.fromCharCode(13));
+          var selectList = document.getElementById("driver_code");
+          for (var i = 0; i < driverList.length; i++) {
+            if (driverList[i]) {
+              var opt = document.createElement("option");
+              var optText = document.createTextNode(driverList[i]);
+              opt.appendChild(optText);
+              selectList.appendChild(opt);
+            }
+          }
+        }
+      }
+      xhr.open("GET", location.protocol + "//" + location.host + "/WebGetDriverList.hal", true);
+      xhr.setRequestHeader('Content-type', 'text/plain');
+      xhr.send();
+
+    </script>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!--a class="navbar-brand" href="/WebCheckRef.hal?arg=main">Главная</a-->
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="label-nav-font"><a href="/dr_valid/get_car_p1.html">Взять машину</a></li>
+              <li class="active label-nav-font"><a href="/dr_valid/return_car_p1.html">Сдать машину</a></li>
+              <li class="label-nav-font"><a href="/dr_valid/add_driver.html">Создать нового водителя</a></li>
+            </ul>
+        </div>
+    </div>
+  </div>
+  <p style="margin-bottom: 100px"></p>
+  <div class="container">
+    <form name="return_car_spec_form" id="return_car_spec_form" autocomplete="off" action="/WebDriverReturnsCar.hal" method="get">
+      <fieldset class="form-group form-group-lg">
+        <div class="form-group">
+          <label class="label-default col-md-12" for="gender">Выберите свой код</label>
+          <select class="form-control" name="driver_code" id="driver_code">
+            <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
+          </select><br>
+        </div>
+      </fieldset>
+      <div class="text-center">
+        <p style="margin-top: 100px;"></p>
+        <p><input class="btn btn-primary btn-lg" type="submit" value="Подтвердить"></p>
+        <p style="margin-top: 100px;"></p>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

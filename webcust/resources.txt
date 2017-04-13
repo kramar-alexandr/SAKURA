@@ -1,0 +1,2 @@
+Открыть модальное окно bootstrap
+http://jsfiddle.net/jlaw/BeL2V/3/

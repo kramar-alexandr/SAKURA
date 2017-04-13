@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="dr_valid/">
+    <title>Сдать машину</title>
+    <link rel="stylesheet" media="screen" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/jquery.signaturepad.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/numeric-1.2.6.min.js"></script>
+    <script src="js/bezier.js"></script>
+    <script src="js/jquery.signaturepad.js"></script>
+    <script src="js/json2.min.js"></script>
+    <script src="js/custom_tools.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        //initialize signaturepad
+        $('#smoothed').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:200});
+
+        //set an image into signaturepad output
+        $('#return_automobile_form').submit(function() {
+          $('#signature')[0].value = $('.sigPad').signaturePad().getSignatureImage();
+          return true;
+        });
+
+        //retrieve parameters from url string
+        var QueryString = RetrieveGetParameters();
+        if (QueryString["driver_code"].length>0)
+          $('#firstname')[0].value = QueryString["driver_code"];
+
+        //calculations
+        function Count_mileage()
+        {
+          var st_m = +$('#start_mileage')[0].value;
+          var ed_m = +$('#end_mileage')[0].value;
+          var diff = null;
+          if (st_m>0 && ed_m>0)
+            diff = ed_m - st_m;
+          $('#diff_mileage')[0].value = diff;
+          if (diff>0)
+          {
+            $('#overmileage').trigger('change');
+            $('#km_cost_no_bonus').trigger('change');
+            $('#km_cost_with_bonus').trigger('change');
+          }
+        }
+        $('#start_mileage').change(Count_mileage);
+        $('#end_mileage').change(Count_mileage);
+
+        function Count_overmileage()
+        {
+          var diff_m = +$('#diff_mileage')[0].value;
+          var uber_m = +$('#uber_mileage')[0].value;
+          var over_m = null;
+          if (diff_m>0 && uber_m>0)
+            over_m = Math.round( diff_m/uber_m*100 - 100);
+          $('#overmileage')[0].value = over_m;
+
+        }
+        $('#uber_mileage').change(Count_overmileage);
+        $('#overmileage').change(Count_overmileage);
+
+        function Count_cashbox()
+        {
+          var cb_last = +$('#cashbox_last')[0].value;
+          var cb_current = +$('#cashbox_current')[0].value;
+          var cb_tot = null;
+          if (cb_last>0 && cb_current>0)
+            cb_tot = cb_last + cb_current;
+          $('#cashbox_tot')[0].value = cb_tot;
+          if (cb_tot>0)
+          {
+            $('#cashbox_for_pay').trigger('change');
+            $('#km_cost_no_bonus').trigger('change');
+          }
+        }
+        $('#cashbox_last').change(Count_cashbox);
+        $('#cashbox_current').change(Count_cashbox);
+
+        function Count_bonus()
+        {
+          var bonus_last = +$('#bonus_last')[0].value;
+          var bonus_current = +$('#bonus_current')[0].value;
+          var bonus_tot = null;
+          if (bonus_last>0 && bonus_current>0)
+            bonus_tot = bonus_last + bonus_current;
+          $('#bonus_tot')[0].value = bonus_tot;
+          if (bonus_tot>0)
+            $('#cashbox_for_pay').trigger('change');
+        }
+        $('#bonus_last').change(Count_bonus);
+        $('#bonus_current').change(Count_bonus);
+
+        function Count_cash()
+        {
+          var cash_last = +$('#cash_last')[0].value;
+          var cash_current = +$('#cash_current')[0].value;
+          var cash_tot = null;
+          if (cash_last>0 && cash_current>0)
+            cash_tot = cash_last + cash_current;
+          $('#cash_tot')[0].value = cash_tot;
+        }
+        $('#cash_last').change(Count_cash);
+        $('#cash_current').change(Count_cash);
+
+        function Count_cashbox_for_pay()
+        {
+          var cash_tot = +$('#cashbox_tot')[0].value;
+          var bonus_tot = +$('#bonus_tot')[0].value;
+          $('#cashbox_for_pay')[0].value = cash_tot - bonus_tot;
+          $('#km_cost_with_bonus').trigger('change');
+        }
+        $('#cashbox_for_pay').change(Count_cashbox_for_pay);
+
+        function Count_km_cost_no_bonus()
+        {
+          var cashbox_tot = +$('#cashbox_tot')[0].value;
+          var diff_mileage = +$('#diff_mileage')[0].value;
+          var cost = null;
+          if (diff_mileage>0)
+            cost = (Math.round(cashbox_tot/diff_mileage*100)/100).toFixed(2);
+          $('#km_cost_no_bonus')[0].value = cost;
+        }
+        $('#km_cost_no_bonus').change(Count_km_cost_no_bonus);
+
+        function Count_km_cost_with_bonus()
+        {
+          var cashbox_for_pay = +$('#cashbox_for_pay')[0].value;
+          var diff_mileage = +$('#diff_mileage')[0].value;
+          var cost = null;
+          if (diff_mileage>0)
+            cost = (Math.round(cashbox_for_pay/diff_mileage * 100)/100).toFixed(2);
+          $('#km_cost_with_bonus')[0].value = cost;
+        }
+        $('#km_cost_with_bonus').change(Count_km_cost_with_bonus);
+
+        //@putdatatoformscript
+      });
+    </script>
+</head>
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <!--a class="navbar-brand" href="/WebCheckRef.hal?arg=main">Главная</a-->
+          </div>
+          <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="label-nav-font"><a href="/dr_valid/get_car_p1.html">Взять машину</a></li>
+                <li class="active label-nav-font"><a href="/dr_valid/return_car_p1.html">Сдать машину</a></li>
+                <li class="label-nav-font"><a href="/dr_valid/add_driver.html">Создать нового водителя</a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+  <p style="margin-bottom: 100px"></p>
+  <div class="container">
+    <form name="return_automobile_form" id="return_automobile_form" autocomplete="off" action="../WebHandleDataFromDriver.hal?action=return" method="post" enctype="text/plain">
+      <fieldset class="form-group form-group-lg">
+        <img id="driverphoto" src="//@DriverPhoto" alt="Фото отсутствует" width="100%">
+        <legend class="label-default">Информация по водителю</legend>
+          <input type="hidden" id="driver_hansa_code" name="driver_hansa_code" readonly/><br>
+          <label class="label-default col-md-12" for="firstname">Имя</label>
+          <input class="form-control" id="firstname" name="firstname" readonly/><br>
+          <label class="label-default col-md-12" for="lastname">Фамилия</label>
+          <input class="form-control" name="lastname" id="lastname" readonly/><br>
+      </fieldset>
+      <p style="margin-bottom: 100px"></p>
+      <fieldset class="form-group form-group-lg">
+        <legend class="label-default">Данные автомобиля</legend>
+          <div>
+            <label class="label-default col-md-12" for="reg_number">Госномер авто</label>
+            <input class="form-control" id="reg_number" name="reg_number" readonly/><br>
+            <label class="label-default col-md-12" for="car_status">Статус авто</label>
+            <select class="form-control" name="car_status" id="car_status">
+              <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
+              <option value="in_work">В работе</option>
+              <option value="no_crew">Нет экипажа</option>
+              <option value="no_shift">Нет сменщика</option>
+              <option value="long_term_service">Длительный сервис</option>
+              <option value="crash_firm_repair">ДТП чиним сами</option>
+              <option value="crash_own_repair">ДТП чиним за свой счет</option>
+            </select><br><br>
+
+            <label class="label-default" for="start_mileage">Начальный пробег</label>
+            <input class="form-control" type="number" name="start_mileage" id="start_mileage" readonly/>
+            <label class="label-default" for="end_mileage">Конечный пробег</label>
+            <input class="form-control" type="number" name="end_mileage" id="end_mileage"/><br>
+            <label class="label-default col-md-12" for="diff_mileage">Разница пробега</label>
+            <input class="form-control" type="number" name="diff_mileage" id="diff_mileage" readonly/><br>
+
+            <label class="label-default col-md-12" for="uber_mileage">Пробег по Уберу</label>
+            <input class="form-control" type="number" name="uber_mileage" id="uber_mileage"/><br>
+            <label class="label-default col-md-12" for="overmileage">Перепробег,%</label>
+            <input class="form-control" type="number" name="overmileage" id="overmileage" readonly/><br>
+          </div>
+          <legend class="label-default">Данные по стоимости</legend>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="km_cost_no_bonus">Стоимость 1км, грн без Бонуса</label>
+            <input class="form-control" type="number" id="km_cost_no_bonus" name="km_cost_no_bonus" readonly/><br>
+            <label class="label-default col-md-12" for="km_cost_with_bonus">Стоимость 1км, грн с Бонусом</label>
+            <input class="form-control" type="number" id="km_cost_with_bonus" name="km_cost_with_bonus" readonly/><br>
+            <label class="label-default col-md-12" for="tot_cost_fuel">Топливо суммарно, грн.</label>
+            <input class="form-control" type="number" id="tot_cost_fuel" name="tot_cost_fuel"/><br>
+          </div>
+          <legend class="label-default">Данные по наличности</legend>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="cashbox_last">Касса за вчера</label>
+            <input class="form-control" type="number" id="cashbox_last" name="cashbox_last"/><br>
+            <label class="label-default col-md-12" for="cashbox_current">Касса за сегодня</label>
+            <input class="form-control" type="number" id="cashbox_current" name="cashbox_current"/><br>
+            <label class="label-default col-md-12" for="cashbox_tot">Касса всего</label>
+            <input class="form-control" type="number" id="cashbox_tot" name="cashbox_tot" readonly/><br>
+
+            <label class="label-default col-md-12" for="bonus_last">Бонус за вчера</label>
+            <input class="form-control" type="number" id="bonus_last" name="bonus_last"/><br>
+            <label class="label-default col-md-12" for="bonus_current">Бонус за сегодня</label>
+            <input class="form-control" type="number" id="bonus_current" name="bonus_current"/><br>
+            <label class="label-default col-md-12" for="bonus_tot">Бонус всего</label>
+            <input class="form-control" type="number" id="bonus_tot" name="bonus_tot" readonly/><br>
+
+            <label class="label-default col-md-12" for="cash_last">Наличка за вчера</label>
+            <input class="form-control" type="number" id="cash_last" name="cash_last"/><br>
+            <label class="label-default col-md-12" for="cash_current">Наличка за сегодня</label>
+            <input class="form-control" type="number" id="cash_current" name="cash_current"/><br>
+            <label class="label-default col-md-12" for="cash_tot">Наличка всего</label>
+            <input class="form-control" type="number" id="cash_tot" name="cash_tot" readonly/><br>
+            <!-- <label class="label-default col-md-12" for="cash_return">Возврат налички всего</label>
+            <input class="form-control" type="number" id="cash_return" name="cash_return" readonly/><br> -->
+            <label class="label-default col-md-12" for="cashbox_for_pay">Касса для расчета</label>
+            <input class="form-control" type="number" id="cashbox_for_pay" name="cashbox_for_pay" readonly/><br>
+            <label class="label-default col-md-12" for="cash_for_driver">Сумма выплаты водителю</label>
+            <input class="form-control" type="number" id="cash_for_driver" name="cash_for_driver" readonly/><br>
+          </div>
+          <legend class="label-default">Обратная связь</legend>
+          <div class="form-group">
+            <label class="label-default col-md-12" for="feedback">Довольны ли Вы работой</label>
+            <select class="form-control" name="feedback" id="feedback">
+              <option value="yes">Да</option>
+              <option value="no">Нет</option>
+              <option value="optional">Другое</option>
+            </select><br><br>
+          </div>
+      </fieldset>
+      <fieldset class="form-group">
+        <div class="sigPad" id="smoothed" style="width:404px;">
+          <ul class="sigNav">
+            <h2>Подпись</h2>
+            <input class="clearButton btn btn-primary form-control" type="button" value="Очистить"/>
+          </ul>
+          <div class="sigWrapper" style="height:auto; margin-top:10px;">
+            <div class="typed"></div>
+            <canvas class="pad" width="400" height="300"></canvas>
+            <input type="hidden" id="signature" name="signature" class="output"/>
+          </div>
+        </div>
+      </fieldset>
+      <div class="text-center">
+        <p style="margin-top: 100px;"></p>
+        <p><input id ="return_automobile_form_submit" class="btn btn-primary btn-lg" type="button" value="Сдать"/></p>
+        <p style="margin-top: 100px;"></p>
+      </div>
+    </form>
+  </div>
+  <!--@includemodalwindow-->
+  <script>
+    var modalName = '#confirmFormModal';
+    //  $('#return_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
+
+    //Set handler for form button
+    $('#return_automobile_form_submit').click(function()
+    {
+      if(+$('#start_mileage')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#start_mileage').offset().top - 150});
+        $('#start_mileage').focus();
+        return;
+      }
+      if(+$('#end_mileage')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#end_mileage').offset().top - 150});
+        $('#end_mileage').focus();
+        return;
+      }
+      if(+$('#uber_mileage')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#uber_mileage').offset().top - 150});
+        $('#uber_mileage').focus();
+        return;
+      }
+      if(+$('#tot_cost_fuel')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#tot_cost_fuel').offset().top - 150});
+        $('#tot_cost_fuel').focus();
+        return;
+      }
+      if(+$('#cashbox_last')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#cashbox_last').offset().top - 150});
+        $('#cashbox_last').focus();
+        return;
+      }
+      if(+$('#cashbox_current')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#cashbox_current').offset().top - 150});
+        $('#cashbox_current').focus();
+        return;
+      }
+      if(+$('#bonus_last')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#bonus_last').offset().top - 150});
+        $('#bonus_last').focus();
+        return;
+      }
+      if(+$('#bonus_current')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#bonus_current').offset().top - 150});
+        $('#bonus_current').focus();
+        return;
+      }
+      if(+$('#cash_last')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#cash_last').offset().top - 150});
+        $('#cash_last').focus();
+        return;
+      }
+      if(+$('#cash_current')[0].value<=0)
+      {
+        $('html,body').animate({scrollTop: $('#cash_current').offset().top - 150});
+        $('#cash_current').focus();
+        return;
+      }
+
+      if($(".sigPad").signaturePad().validateForm()==false)
+      {
+        $('.sigPad').find(".error")[0].textContent = "Пожалуйста, подпишите документ";
+        $('html,body').animate({scrollTop: $('#smoothed').offset().top});
+        return;
+      }
+      $(modalName).modal('show');
+    });
+
+    $(modalName)[0].Modal_confirm_func(function () {
+      if($(modalName)[0].Password_field_is_empty()===false)
+      {
+        var xhr = new XMLHttpRequest();
+        function reqReadyStateChange() {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            if (xhr.responseText=="confirmed") {
+              $(modalName).modal('hide');
+              $('#return_automobile_form').submit();
+            }
+          }
+        }
+        xhr.onreadystatechange = reqReadyStateChange;
+        xhr.open("POST", location.protocol + "//" + location.host + "/WebCheckValidatorPassword.hal", true);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        var data = {};
+        data.p = $("#password_field")[0].value;
+        var json = JSON.stringify(data);
+        xhr.send(json);
+      }
+      else {
+        $(modalName)[0].Focus_password_field();
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+event startup
+begin
+  SetLangMode(LangUkrainian,"UKR",0);
+  
+  Report("HAL Primitives",HalSpecRClass,HalSpecRn,0,modSY);
+  
+	return;
+end;
