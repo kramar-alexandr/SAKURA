@@ -78,14 +78,14 @@
             <select class="form-control" name="car_status" id="car_status">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
               <option value="in_work">В работе</option>
-              <option value="no_crew">Нет экипажа</option>
-              <option value="no_shift">Нет сменщика</option>
+              <!-- <option value="no_crew">Нет экипажа</option> -->
+              <!-- <option value="no_shift">Нет сменщика</option> -->
               <option value="long_term_service">Длительный сервис</option>
               <option value="crash_firm_repair">ДТП чиним сами</option>
               <option value="crash_own_repair">ДТП чиним за свой счет</option>
             </select><br><br>
             <label class="label-default col-md-12" for="start_mileage">Начальный пробег</label>
-            <input type="number" class="form-control" name="start_mileage" id="start_mileage"/><br>
+            <input type="number" class="form-control" name="start_mileage" id="start_mileage" value="//@start_mileage" readonly/><br>
           </div>
       </fieldset>
       <fieldset class="form-group">
@@ -108,7 +108,7 @@
       </div>
     </form>
   </div>
-  <!--@includemodalwindow-->
+  <!--@includeConfirmModalWindow-->
   <script>
     var modalName = '#confirmFormModal';
     //  $('#get_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
@@ -116,13 +116,18 @@
     //Set handler for form button
     $('#get_automobile_form_submit').click(function()
     {
-      if(+$('#start_mileage')[0].value<=0)
+      // if(+$('#start_mileage')[0].value<=0)
+      // {
+      //   $('html,body').animate({scrollTop: $('#start_mileage').offset().top - 150});
+      //   $('#start_mileage').focus();
+      //   return;
+      // }
+      if($('#car_status')[0].value=='blankvalue')
       {
-        $('html,body').animate({scrollTop: $('#start_mileage').offset().top - 150});
-        $('#start_mileage').focus();
+        $('html,body').animate({scrollTop: $('#car_status').offset().top - 150});
+        $('#car_status').focus();
         return;
       }
-
       if($(".sigPad").signaturePad().validateForm()==false)
       {
         $('.sigPad').find(".error")[0].textContent = "Пожалуйста, подпишите документ";

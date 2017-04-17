@@ -32,13 +32,25 @@ begin
     RecordField(CashTot,M4UVal,0,0);
     RecordField(CashboxForPay,M4UVal,0,0);
     RecordField(CashForDriver,M4UVal,0,0);
-    RecordField(DriverFeedback,M4Str,0,0); 
+    RecordField(DriverFeedback,M4Str,255,0); 
     RecordField(CarDispatchedTime,M4Time,0,0);
     RecordField(CarReturnedTime,M4Time,0,0);
+    RecordField(DriverFeedback2,M4Str,255,0);
   EndRecordAdd;
   
   RecordAddBegin(CUVc,"CUVc_Custom");
     RecordField(DriverType,M4Int,0,0);
+  EndRecordAdd;
+  
+  RecordAddBegin(RentINVc,"RentINVc_Custom");
+    RecordField(InitMileage,M4UVal,0,0);
+  EndRecordAdd;
+  
+  RecordAddBegin(RentResBookVc,"RentResBookVc_Custom");
+    KeyBegin(CustCode);
+    KeySegment(CustCode);
+    KeySegment(SerNr);
+    KeySegment(RowNr);
   EndRecordAdd;
 
 return;

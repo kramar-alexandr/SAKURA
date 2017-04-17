@@ -1,7 +1,8 @@
 event startup
 begin
-  SetLangMode(LangUkrainian,"UKR",0);
+  SetLangMode(LangRussian,"RUS",0);
   
+  Maintenance("Удалить все записи",CustomRegisterRemoveVClass,CustomRegisterRemoveMn,modDBMain);
   Report("HAL Primitives",HalSpecRClass,HalSpecRn,0,modSY);
   
 	return;

@@ -1,0 +1,16 @@
+SetLangMode(LangRussian,"RUS",0); 
+
+
+window CustomRegisterRemoveVClass:1
+  wtag("language","RUS"), wtag("product","*"), wtag("productcode","*"), wtag("device","computer")
+begin
+  real h,v,vm,vs;
+  WindowBegin("“далить все записи",CustomRegisterRemoveVClass,CGMnt,RcType);
+  SetWRect(20,80,500,220);
+  v = 10; vs = 20; h = 120;
+  /*PeriodField(h,v,"Џериод");
+  CheckBox(h,v+=32,0,"‘ч/ф касс.терминала",flags[0]);*/
+  
+  EndWindow;
+end;
+

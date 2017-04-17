@@ -2063,7 +2063,8 @@ begin
   v = v + vs;
   EditField(h,v+=vs,100,"Касса для расчета",Normal,CashboxForPay,false,0);
   EditField(h2,v,100,"Выплата водителю",Normal,CashForDriver,false,0);
-  EditField(h,v+=vs,300,"Отзыв водителя",Normal,DriverFeedback,false,0); //Edit***************************Sasha2,11:29 11.04.2017 }
+  EditField(h,v+=vs,500,"Довольны ли работой",Normal,DriverFeedback,false,0); 
+  EditField(h,v+=vs,500,"Довольны ли пересменкой",Normal,DriverFeedback2,false,0); //Edit***************************Sasha2,11:29 11.04.2017 }
   
   Tile(2,70,true,"2",Math);
   CheckBox(20,-20,0,"Выполнено",Done);
@@ -2121,6 +2122,52 @@ begin
   SpecialMenu("Создать прием товара",'G',0,"RentResOffHireDsm");
   SpecialMenu("Добавить начисление",' ',0,"RentResChargeDsm");
   SpecialMenu("Создать резервирование в связи с возвратом товаров",' ',0,"RentResNewRentDsm"); // someone please come up with a shorter name...
+  EndWindow;
+end;
+
+window RentINDClass:1
+  wtag("language","RUS"), wtag("product","*"), wtag("productcode","*"), wtag("device","computer")
+begin
+  real h,h2,v,vs;
+  WindowBegin("Товар аренды",RentINDClass,CGview,-);
+  SetWRect(20,80,600,380);
+  Sizeable(-1,-1,-1,0);
+  UseView(RentINVc);
+//  FormName(RentINForm);//not exist
+  Tile(0,90,false,"",Code);
+  v = 6; vs = 20; h = 120; h2 = 350;
+  EditField(h,v, 110,"Код",St_i,Code,false,INSClass);
+  EditField(h2,v,50,"Группа",Normal,Group,false,RentITSClass);
+  EditField(h,v+=vs,110,"Сер. номер",St_i,SerialNr,false,SerialNrSClass);
+  EditField(h2,v,90,"Цена покуп.",Normal,Value,true,0);
+  EditField(h,v+=vs,320,"Наименование",Normal,Name,false,0);
+  EditField(h,v+=vs,50,"Стартовый пробег",Normal,InitMileage,false,0); //Edit***************************Sasha2,14:17 14.04.2017
+  CheckBox(460,v=10,0,"Закрыт",Terminated);
+  CheckBox(460,v+=20,0,"Структура",RecepyItem);
+  TileButton(1,"Аксессуары");
+  TileButton(2,"Текст");
+  Tile(1,130,false,"1",BarCode);
+  EditField(h,v=6,110,"Инв. №",Normal,InventoryNr,false,AT2UnitSClass);
+  EditField(h2,v,-40,"Штрих-код",Normal,BarCode,false,0);
+  EditField(h,v+=vs,90,"Ориг. склад",Normal,OrgLocation,false,LocationSClass);
+  EditField(h2,v,90,"Текущий статус",ViewOnly,RentINStatus,false,SetSClass);
+  EditField(h,v+=vs,90,"Дата приобр.",Normal,PurchaseDate,false,PasteCurDate);
+  EditField(h2,v,90,"Гарантия до",ViewOnly,WarrantyUntil,true,PasteCurDate);
+  EditField(h,v+=vs,90,"Аксессуары",Normal,IncludeRecepy,false,RecSClass);
+  EditField(h2,v,-40,"Объекты",Normal,Objects,false,ObjSClass);
+  EditField(h,v+=vs,120,"Товар сч/ф",Normal,InvItem,false,INSClass);
+  EditField(h2,v,-40,"Наим.",Normal,InvItemName,false,0);
+  EditField(h,v+=vs,90,"Осн. тип начисл.",Normal,AgreeType,true,AgreeTypeSClass);
+  EditField(h2,v,90,"Прибл.осн.цена начисл.",ViewOnly,ApxBasePrice,true,0);
+  Tile(2,110,true,"2",Math);
+  v = 24;
+  MatrixBegin(4,v,-20,-20,RentINTextRowType,99);
+  MatCol(1,28,"Язык",0,LangCode,false,LangSClass);
+  MatCol(1,94,"Текст",0,Text,false,0);
+  EndMatrix;
+//  SpecialMenu("Serial Number History",' ',0,"RentINDHistsm");
+  SpecialMenu("История серийного номера",' ',0,"RentINDKnownHist");
+  SpecialMenu("Обновить приблизительную базовую цену",' ',0,"RentUpdApxPricesm");
   EndWindow;
 end;
 
@@ -2658,5 +2705,155 @@ begin
     SpecialMenu("Создать объекты",' ',1,"CreateObjectCUDsm");
     SpecialMenu("Создать письмо с паролем",' ',3,"RandomPassMailCUDsm");
   end;
+  EndWindow;
+end;
+
+window AgreementDClass:1
+  wtag("language","RUS"), wtag("product","*"), wtag("productcode","*"), wtag("device","computer")
+begin
+  real h,h2,h3,h4,v,vm,vs;
+  WindowBegin("Соглашение",AgreementDClass,CGview,-);
+  SetWRect(20,80,630,430);
+  Sizeable(-1,-1,0,0);
+  UseView(AgreementVc);
+  FormName(AgreementForm);
+  h = 120; h2 = 330; vs=20;
+  Tile(0,90,false,"",CustCode);
+  EditField(h,vm=(v=6), 82,"Номер",St_i,SerNr,false,0);
+  EnterSkip(CustCode);
+  EditField(h2,v,-40,"Наимен.",Normal,Addr0,false,0);
+  EditField(h,v+=vs,110, "Клиент",Normal,CustCode,false,CUSClass);
+  EnterSkip(Site);
+  EditField(h2,v,-40,"Контакт",Normal,ClientContact,false,ContactSClass);
+  EditField(h,v+=vs,110, "Адрес дост.",Normal,Site,false,DelAddr3SClass);
+  EnterSkip(startDate);
+  EditField(h2,v,110, "Отдел",Normal,Department,false,DepSClass);
+  TileButton(1,"Даты");
+  TileButton(2,"Резервиров.");
+//  TileButton(3,"Валюта");
+  TileButton(3,"Усл.отгр.");
+  TileButton(4,"Фактуриров.");
+  TileButton(5,"Юр.адрес");
+  TileButton(6,"Адрес дост.");
+  TileButton(7,"Условия");
+//  TileButton(7,"Conditions");
+  Tile(1,75,false,"1",startDate);
+  vs = 20; h = 120; h2 = 330; h3 = 470;
+  EditField(h,v=6,82,"Дата нач.",Normal,startDate,false,PasteCurDate);
+  EditField(h2,v,82,"Дата оконч.",Normal,endDate,false,PasteCurDate);
+  EditField(h,v+=vs,50,"Тип",Normal,AgreeType,false,AgreeTypeSClass);
+  EnterSkip(PayDeal);
+  EditField(h2,v,82,"Дата опер.",Normal,TransDate,false,PasteCurDate);
+  EditField(h,v+=vs,25,"Усл. опл.",Normal,PayDeal,false,PDSClass);
+  EnterSkip(CurncyCode);
+  EditField(h2,v,82,"Дата отмены",Normal,CancelDate,false,PasteCurDate);
+  ButtonFrame(h3,v=16,150,3,"Статус");
+  RadioButton(h3,v,0,0,"Активно",AgreeStatus);
+  RadioButton(h3,v+=16,1,0,"Нет больше операций",AgreeStatus); // Whatch this change..
+  RadioButton(h3,v+=16,2,0,"Закончено",AgreeStatus);
+  Tile(2,120,true,"2",CurncyCode);
+  CheckBox(20,-20,0,"OK",OKFlag);
+  EditField(160,-21,50,"Валюта",Normal,CurncyCode,false,CurncyCodeSClass);
+  v = 24;
+  RecordList2(10,30,-30,-50,"RentResVc");
+  RlColKey(4,4,"Код",Code,false,AgreementCode);
+  RlColKey(90,90,"Сер. №",SerialNr,false,AgreementSerialNr);
+  RlColKey(190,190,"Вып.",Done,false,AgreementStart);
+  RlColKey(230,230,"Наимен.",Name,false,AgreementName);
+  RlColKey(390,390,"Дата нач.",TransDate,false,AgreementStart);
+  RlColKey(480,480,"Дата окон.",EndDate,false,AgreementEnd);
+/*  Seems we can't create a good looking window with more than one right aligned
+  RlCol(300,300,"Price",Price,true);
+  RlCol(-100,-100,"%",vRebate,false);
+*/
+  //RlCol(-100,-120,"Цена за период",Sum,true); //Edit***************************Sasha2,17:24 14.04.2017
+  RlCol(-100,-120,"Номер резерва",SerNr,true); //Edit***************************Sasha2,17:24 14.04.2017
+/*
+  Tile(3,70,false,"3",FrRate);
+  vs = 20;
+  EditField(h=120,v=6,50,"Валюта",Normal,CurncyCode,false,CurncyCodeSClass);
+  EditField(h2=295,v,50,"Курс",Normal,FrRate,true,0);
+  EditField(h3=360,v,50,":",Normal,ToRateB1,true,0);
+  StaticText(h3+60,v+12,"Осн. вал. 1",false);
+  EditField(h,v+=vs,50,"Осн. вал. 1",Normal,BaseRate1,true,0);
+  EditField(h3,v,50,":",Normal,ToRateB2,true,0);
+  StaticText(h3+60,v+12,"Осн. вал. 2",false);
+  EditField(h,v+=vs,50,"Осн. вал. 2",Normal,BaseRate2,true,0);
+*/
+  Tile(3,130,false,"3",ShipDeal);
+  h = 120; h2 = 330;
+  EditField(h,v=6,60,"Усл. отр",Normal,ShipDeal,false,ShipDealSClass);
+  EditField(h2,v,60,"Спос. отг.",Normal,ShipMode,false,DMSClass);
+  if (HasSalesman or HasSalesmanBonus) then begin
+    EditField(h,v+=vs,60,"Продавец",Normal,SalesMan,false,UserSClass);
+  end;
+  EditField(h2,v,-40,"Ответсв.",Normal,OurContact,false,0);
+  EditField(h,v+=vs,80,"Сч/ф на",Normal,InvoiceToCode,false,CUSClass);
+  EditField(h2,v,  60,"Язык",Normal,LangCode,false,LangSClass);
+  EditField(h,v+=vs,80,"Склад",Normal,Location,false,LocationSClass);
+  EditField(h,v+=vs,130,"Объект",Normal,Objects,false,ObjSClass);
+  EditField(h2,v,-20,"Ключ сорт.",Normal,Sorting,false,0);
+  EditField(h,v+=vs, -20,"Комментарий",Normal,InvComment,false,0);
+  Tile(4,230,false,"4",PriceList); vs = 20;
+  v = 6; h = 120; vs = 20; h3 = 510;
+  ButtonFrame(h,v=20,250,3,"Содержание сч/ф");
+  RadioButton(h,v,0,0,"Одна строка на товар в резервировании",InvoiceBase);
+  RadioButton(h,v+=16,1,0,"Одна строка на резервирование",InvoiceBase);
+  RadioButton(h,v+=16,2,0,"Одна строка на соглашение",InvoiceBase);
+  ButtonFrame(h,v+=40,250,3,"Период");
+  RadioButton(h,v,0,0,"не включать",IncludePeriod);
+  RadioButton(h,v+=16,1,0,"на строке перед товаром",IncludePeriod);
+  RadioButton(h,v+=16,2,0,"та же строка, после наимен. товара",IncludePeriod);
+  ButtonFrame(h,v+=40,250,3,"Кол-во (только для одной стр. на резерв.)");
+  RadioButton(h,v,0,0,"Дни как количество",UseAsQty);
+  RadioButton(h,v+=16,1,0,"Товары как количество",UseAsQty);
+  RadioButton(h,v+=16,2,0,"Умножать товары на кол-во",UseAsQty);
+  ButtonFrame(h4=400,v=20,250,3,"Групповое фактурирование");
+  RadioButton(h4,v,0,0,"Нет",GroupInvoice);
+  RadioButton(h4,v+=16,1,0,"Одна сч/ф на клиента",GroupInvoice);
+  RadioButton(h4,v+=16,2,0,"Одна сч/ф на клиента/место",GroupInvoice);
+  CheckBox(h4,v+=40,0,"Включать оригин. товар",IncludeOriginalItem);
+  CheckBox(h4,v+=16,0,"Включать информацию о соглашении и месте",IncludeSite);
+  CheckBox(h4,v+=16,0,"Включать номер счета клиенту",InclCustOrdNr);
+  CheckBox(h4,v+=16,0,"Включать номер резервирования аренды",InclRentResNo);
+  CheckBox(h4,v+=16,0,"Добавлять пустую строку как разделитель",AddEmptyLine);
+  EditField(h3,v+=40,  60,"Прейскурант",Normal,PriceList,false,PLDefSClass);
+  Tile(5,220,false,"5",Addr1); vs = 20;
+  h = 120; h2 = 330; h3 = 510;
+  EditField(h,v=6,-20,"Сч/ф на",Normal,Addr1,false,0);
+  EditField(h,v+=vs,-20,"Адрес",Normal,Addr2,false,0);
+  EditField(h,v+=vs,-20,"",Normal,Addr3,false,0);
+  EditField(h,v+=vs,-20,"",Normal,InvAddr3,false,0);
+  EditField(h,vm=(v+=vs),-20,"",Normal,InvAddr4,false,0);
+  v = VATZoneButtonsLabelsrus(h+4,v+=40,170,16);
+  EditField(h2,v=vm+vs, -20,"ИНН",Normal,VATNr,false,0);
+  EditField(h2,v+=vs,100,"Телефон",Normal,Phone,false,0);
+  EditField(h2,v+=vs,100,"Факс",Normal,Fax,false,0);
+  EditField(h3,v=vm+vs+vs, -20,"Эл. почта",Normal,eMail,false,0);
+  Tile(6,130,false,"6",ShipAddr0); vs = 20;
+  h = 120; h2 = 330;
+  EditField(h,v=6,-20,"Отгрузка",Normal,ShipAddr0,false,0);
+  EditField(h,v+=vs, -20,"Адрес",Normal,ShipAddr1,false,0);
+  EditField(h,v+=vs, -20,"",Normal,ShipAddr2,false,0);
+  EditField(h,v+=vs, -20,"",Normal,ShipAddr3,false,0);
+  EditField(h,v+=vs, -20,"",Normal,DelAddr3,false,0);
+  EditField(h,v+=vs, -20,"",Normal,DelAddr4,false,0);
+  Tile(7,90,true,"7",LTxtCode);
+  EditField(h,v=6,50,"Станд.текст",Normal,LTxtCode,false,LTxtSClass);
+  StaticText(h-6,(v=v+vs)+9,"Текст",true);
+  TextField(h,v,-21,-16,Math,0);
+  if (UserCanReport("AgreementInfoRn","",true)) then begin
+    SpecialMenu("Информация о соглашении",'I',0,"AgreementInfoDsm");
+  end;
+  SpecialMenu("Доступность",'B',0,"AgreementAvailableDsm");
+  SpecMenuGroup("",kSpecMenuGroupTypeExtendedPlusMenu,0);         
+  SpecialMenu("Добавить плату",' ',0,"AgreementChargeDsm");         
+  SpecialMenu("Создать возврат",'K',0,"AgreementCollectionDsm");
+  SpecialMenu("Создать счёт-фактуру",'F',5,"InvoiceAgreementDsm");         
+  SpecialMenu("Создать отправку",'L',0,"AgreementDispatchDsm");         
+  SpecialMenu("Создать прием товара",'G',0,"AgreementOffHireDsm");
+  SpecialMenu("Создать объект",'o',1,"CreateObjAgreeDsm");         
+  SpecialMenu("Создать арендные начисления",' ',0,"ChargeAgreementDsm");
+  SpecialMenu("Создать резервацию для аренды",' ',0,"AgreementNewDsm");         
   EndWindow;
 end;

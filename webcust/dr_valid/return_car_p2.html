@@ -35,10 +35,10 @@
           var st_m = +$('#start_mileage')[0].value;
           var ed_m = +$('#end_mileage')[0].value;
           var diff = null;
-          if (st_m>0 && ed_m>0)
+          if (st_m>=0 && ed_m>=0)
             diff = ed_m - st_m;
           $('#diff_mileage')[0].value = diff;
-          if (diff>0)
+          if (diff>=0)
           {
             $('#overmileage').trigger('change');
             $('#km_cost_no_bonus').trigger('change');
@@ -53,7 +53,7 @@
           var diff_m = +$('#diff_mileage')[0].value;
           var uber_m = +$('#uber_mileage')[0].value;
           var over_m = null;
-          if (diff_m>0 && uber_m>0)
+          if (diff_m>=0 && uber_m>0)
             over_m = Math.round( diff_m/uber_m*100 - 100);
           $('#overmileage')[0].value = over_m;
 
@@ -61,18 +61,28 @@
         $('#uber_mileage').change(Count_overmileage);
         $('#overmileage').change(Count_overmileage);
 
+        function Handle_tot_cost_fuel_change()
+        {
+          var tot_cost_fuel = +$('#tot_cost_fuel')[0].value;
+          if (tot_cost_fuel>0)
+          {
+            $('#cash_for_driver').trigger('change');
+          }
+        }
+        $('#tot_cost_fuel').change(Handle_tot_cost_fuel_change);
+
         function Count_cashbox()
         {
           var cb_last = +$('#cashbox_last')[0].value;
           var cb_current = +$('#cashbox_current')[0].value;
           var cb_tot = null;
-          if (cb_last>0 && cb_current>0)
+          if (cb_last>0 || cb_current>0)
             cb_tot = cb_last + cb_current;
           $('#cashbox_tot')[0].value = cb_tot;
           if (cb_tot>0)
           {
             $('#cashbox_for_pay').trigger('change');
-            $('#km_cost_no_bonus').trigger('change');
+            $('#km_cost_with_bonus').trigger('change');
           }
         }
         $('#cashbox_last').change(Count_cashbox);
@@ -83,7 +93,7 @@
           var bonus_last = +$('#bonus_last')[0].value;
           var bonus_current = +$('#bonus_current')[0].value;
           var bonus_tot = null;
-          if (bonus_last>0 && bonus_current>0)
+          if (bonus_last>0 || bonus_current>0)
             bonus_tot = bonus_last + bonus_current;
           $('#bonus_tot')[0].value = bonus_tot;
           if (bonus_tot>0)
@@ -97,7 +107,7 @@
           var cash_last = +$('#cash_last')[0].value;
           var cash_current = +$('#cash_current')[0].value;
           var cash_tot = null;
-          if (cash_last>0 && cash_current>0)
+          if (cash_last>0 || cash_current>0)
             cash_tot = cash_last + cash_current;
           $('#cash_tot')[0].value = cash_tot;
         }
@@ -109,31 +119,61 @@
           var cash_tot = +$('#cashbox_tot')[0].value;
           var bonus_tot = +$('#bonus_tot')[0].value;
           $('#cashbox_for_pay')[0].value = cash_tot - bonus_tot;
-          $('#km_cost_with_bonus').trigger('change');
+          $('#km_cost_no_bonus').trigger('change');
+          $('#cash_for_driver').trigger('change');
         }
         $('#cashbox_for_pay').change(Count_cashbox_for_pay);
 
         function Count_km_cost_no_bonus()
         {
-          var cashbox_tot = +$('#cashbox_tot')[0].value;
+          var cashbox_for_pay = +$('#cashbox_for_pay')[0].value;
           var diff_mileage = +$('#diff_mileage')[0].value;
           var cost = null;
           if (diff_mileage>0)
-            cost = (Math.round(cashbox_tot/diff_mileage*100)/100).toFixed(2);
+            cost = (Math.round(cashbox_for_pay/diff_mileage*100)/100).toFixed(2);
           $('#km_cost_no_bonus')[0].value = cost;
         }
         $('#km_cost_no_bonus').change(Count_km_cost_no_bonus);
 
         function Count_km_cost_with_bonus()
         {
-          var cashbox_for_pay = +$('#cashbox_for_pay')[0].value;
+          var cashbox_tot = +$('#cashbox_tot')[0].value;
           var diff_mileage = +$('#diff_mileage')[0].value;
           var cost = null;
           if (diff_mileage>0)
-            cost = (Math.round(cashbox_for_pay/diff_mileage * 100)/100).toFixed(2);
+            cost = (Math.round(cashbox_tot/diff_mileage * 100)/100).toFixed(2);
           $('#km_cost_with_bonus')[0].value = cost;
         }
         $('#km_cost_with_bonus').change(Count_km_cost_with_bonus);
+
+        function Count_cash_for_driver()
+        {
+          var cashbox_for_pay = +$('#cashbox_for_pay')[0].value;
+          var cash = null;
+          if (cashbox_for_pay>=1500) {
+            var tot_cost_fuel = +$('#tot_cost_fuel')[0].value;
+            cash = (cashbox_for_pay - tot_cost_fuel)/2;
+            //cost = (Math.round(cashbox_tot/diff_mileage * 100)/100).toFixed(2);
+          }
+          $('#cash_for_driver')[0].value = cash;
+        }
+        $('#cash_for_driver').change(Count_cash_for_driver);
+
+        function Handle_jobFeedback()
+        {
+          if ($('#jobFeedback')[0].value=="optional") {
+            alert("optional");
+          }
+        }
+        $('#jobFeedback').change(Handle_jobFeedback);
+
+        function Handle_shiftFeedback()
+        {
+          if ($('#shiftFeedback')[0].value=="optional") {
+            alert("optional");
+          }
+        }
+        $('#shiftFeedback').change(Handle_shiftFeedback);
 
         //@putdatatoformscript
       });
@@ -180,12 +220,12 @@
             <label class="label-default col-md-12" for="car_status">Статус авто</label>
             <select class="form-control" name="car_status" id="car_status">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
-              <option value="in_work">В работе</option>
+              <!-- <option value="in_work">В работе</option> -->
               <option value="no_crew">Нет экипажа</option>
               <option value="no_shift">Нет сменщика</option>
-              <option value="long_term_service">Длительный сервис</option>
-              <option value="crash_firm_repair">ДТП чиним сами</option>
-              <option value="crash_own_repair">ДТП чиним за свой счет</option>
+              <!-- <option value="long_term_service">Длительный сервис</option> -->
+              <!-- <option value="crash_firm_repair">ДТП чиним сами</option> -->
+              <!-- <option value="crash_own_repair">ДТП чиним за свой счет</option> -->
             </select><br><br>
 
             <label class="label-default" for="start_mileage">Начальный пробег</label>
@@ -240,8 +280,16 @@
           </div>
           <legend class="label-default">Обратная связь</legend>
           <div class="form-group">
-            <label class="label-default col-md-12" for="feedback">Довольны ли Вы работой</label>
-            <select class="form-control" name="feedback" id="feedback">
+            <label class="label-default col-md-12" for="jobFeedback">Довольны ли Вы работой</label>
+            <select class="form-control" name="jobFeedback" id="jobFeedback">
+              <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
+              <option value="yes">Да</option>
+              <option value="no">Нет</option>
+              <option value="optional">Другое</option>
+            </select><br><br>
+            <label class="label-default col-md-12" for="shiftFeedback">Довольны ли Вы пересменкой</label>
+            <select class="form-control" name="shiftFeedback" id="shiftFeedback">
+              <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
               <option value="yes">Да</option>
               <option value="no">Нет</option>
               <option value="optional">Другое</option>
@@ -268,7 +316,7 @@
       </div>
     </form>
   </div>
-  <!--@includemodalwindow-->
+  <!--@includeConfirmModalWindow-->
   <script>
     var modalName = '#confirmFormModal';
     //  $('#return_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
@@ -334,6 +382,31 @@
       {
         $('html,body').animate({scrollTop: $('#cash_current').offset().top - 150});
         $('#cash_current').focus();
+        return;
+      }
+      if(+$('#cashbox_for_pay')[0].value < 1500)
+      {
+        $('html,body').animate({scrollTop: $('#cashbox_for_pay').offset().top - 150});
+        $('#cashbox_for_pay').focus();
+        alert("ПЛАН НЕ ВЫПОЛНЕН, обратитесь к администратору");
+        return;
+      }
+      if($('#car_status')[0].value=='blankvalue')
+      {
+        $('html,body').animate({scrollTop: $('#car_status').offset().top - 150});
+        $('#car_status').focus();
+        return;
+      }
+      if($('#jobFeedback')[0].value=='blankvalue')
+      {
+        $('html,body').animate({scrollTop: $('#jobFeedback').offset().top - 150});
+        $('#jobFeedback').focus();
+        return;
+      }
+      if($('#shiftFeedback')[0].value=='blankvalue')
+      {
+        $('html,body').animate({scrollTop: $('#shiftFeedback').offset().top - 150});
+        $('#shiftFeedback').focus();
         return;
       }
 
