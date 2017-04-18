@@ -12,6 +12,7 @@
     <script src="js/jquery.signaturepad.js"></script>
     <script src="js/json2.min.js"></script>
     <script src="js/custom_tools.js"></script>
+    <script src="js/bs_modal.js"></script>
     <script>
       $(document).ready(function() {
 
@@ -161,16 +162,16 @@
 
         function Handle_jobFeedback()
         {
-          if ($('#jobFeedback')[0].value=="optional") {
-            alert("optional");
+          if ($('#jobFeedback')[0].value=="optional" && $('#feedbackModal').length>0) {
+            $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы работой?",$('#jobFeedbackText')[0].value,'jobFeedbackText');
           }
         }
         $('#jobFeedback').change(Handle_jobFeedback);
 
         function Handle_shiftFeedback()
         {
-          if ($('#shiftFeedback')[0].value=="optional") {
-            alert("optional");
+          if ($('#shiftFeedback')[0].value=="optional" && $('#feedbackModal').length>0) {
+            $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы пересменкой?",$('#shiftFeedbackText')[0].value,'shiftFeedbackText');
           }
         }
         $('#shiftFeedback').change(Handle_shiftFeedback);
@@ -280,6 +281,7 @@
           </div>
           <legend class="label-default">Обратная связь</legend>
           <div class="form-group">
+            <input type="hidden" name="jobFeedbackText" id="jobFeedbackText">
             <label class="label-default col-md-12" for="jobFeedback">Довольны ли Вы работой</label>
             <select class="form-control" name="jobFeedback" id="jobFeedback">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
@@ -287,6 +289,7 @@
               <option value="no">Нет</option>
               <option value="optional">Другое</option>
             </select><br><br>
+            <input type="hidden" name="shiftFeedbackText" id="shiftFeedbackText">
             <label class="label-default col-md-12" for="shiftFeedback">Довольны ли Вы пересменкой</label>
             <select class="form-control" name="shiftFeedback" id="shiftFeedback">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
@@ -317,9 +320,10 @@
     </form>
   </div>
   <!--@includeConfirmModalWindow-->
+  <!--@includeFeedBackModalWindow-->
   <script>
-    var modalName = '#confirmFormModal';
-    //  $('#return_automobile_form_submit').attr({"data-toggle": "modal", "data-target": modalName});
+    var confirmModalName = '#confirmFormModal';
+    //  $('#return_automobile_form_submit').attr({"data-toggle": "modal", "data-target": confirmModalName});
 
     //Set handler for form button
     $('#return_automobile_form_submit').click(function()
@@ -403,10 +407,24 @@
         $('#jobFeedback').focus();
         return;
       }
+      if($('#jobFeedback')[0].value=='optional' && $('#jobFeedbackText')[0].value=='')
+      {
+        $('html,body').animate({scrollTop: $('#jobFeedback').offset().top - 150});
+        $('#jobFeedback').focus();
+        alert("Оставьте комментарий для опции 'Другое'");
+        return;
+      }
       if($('#shiftFeedback')[0].value=='blankvalue')
       {
         $('html,body').animate({scrollTop: $('#shiftFeedback').offset().top - 150});
         $('#shiftFeedback').focus();
+        return;
+      }
+      if($('#shiftFeedback')[0].value=='optional' && $('#shiftFeedbackText')[0].value=='')
+      {
+        $('html,body').animate({scrollTop: $('#shiftFeedback').offset().top - 150});
+        $('#shiftFeedback').focus();
+        alert("Оставьте комментарий для опции 'Другое'");
         return;
       }
 
@@ -416,17 +434,17 @@
         $('html,body').animate({scrollTop: $('#smoothed').offset().top});
         return;
       }
-      $(modalName).modal('show');
+      $(confirmModalName).modal('show');
     });
 
-    $(modalName)[0].Modal_confirm_func(function () {
-      if($(modalName)[0].Password_field_is_empty()===false)
+    $(confirmModalName)[0].ModalConfirmFunc(function () {
+      if($(confirmModalName)[0].PasswordFieldIsEmpty()===false)
       {
         var xhr = new XMLHttpRequest();
         function reqReadyStateChange() {
           if (xhr.readyState == 4 && xhr.status == 200) {
             if (xhr.responseText=="confirmed") {
-              $(modalName).modal('hide');
+              $(confirmModalName).modal('hide');
               $('#return_automobile_form').submit();
             }
           }
@@ -440,7 +458,7 @@
         xhr.send(json);
       }
       else {
-        $(modalName)[0].Focus_password_field();
+        $(confirmModalName)[0].FocusPasswordField();
       }
     });
   </script>

@@ -12,6 +12,7 @@
     <script src="js/jquery.signaturepad.js"></script>
     <script src="js/json2.min.js"></script>
     <script src="js/custom_tools.js"></script>
+    <script src="js/bs_modal.js"></script>
     <script>
       $(document).ready(function() {
 
@@ -137,8 +138,8 @@
       $(modalName).modal('show');
     });
 
-    $(modalName)[0].Modal_confirm_func(function () {
-      if($(modalName)[0].Password_field_is_empty()===false)
+    $(modalName)[0].ModalConfirmFunc(function () {
+      if($(modalName)[0].PasswordFieldIsEmpty()===false)
       {
        var xhr = new XMLHttpRequest();
        function reqReadyStateChange() {
@@ -158,7 +159,7 @@
        xhr.send(json);
       }
       else {
-        $(modalName)[0].Focus_password_field();
+        $(modalName)[0].FocusPasswordField();
       }
     });
   </script>

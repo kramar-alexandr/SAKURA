@@ -1,0 +1,57 @@
+<div class="container">
+  <div id="feedbackModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title label-default" id="feedbackModalLabel">Заголовок</h4>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="feedback_target_field">
+          <fieldset class="form-group form-group-lg">
+            <textarea class="form-control" name="feedback_comment" id="feedback_comment" placeholder="Не более 255 символов" maxlength="255" rows="10"></textarea>
+          </fieldset><br><br>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="font-size: 40px">Закрыть</button>
+          <button type="button" class="btn btn-primary" id="modal_feedback_button" style="font-size: 40px">Продолжить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  //show modal feedback window with params
+  $('#feedbackModal')[0].ModalFeedbackShow = function (title,text,targetField)
+  {
+    $("#feedbackModalLabel")[0].textContent = title;
+    $("#feedback_target_field")[0].value = targetField;
+    $("#feedback_comment")[0].value = text;
+    $('#feedbackModal').modal('show');
+    $('#feedbackModal')[0].FocusFeedbackField();
+  }
+  //put feeedback to certain form field
+  $('#modal_feedback_button').click(function(){
+    var feedbackComment = $("#feedback_comment")[0].value;
+    if (feedbackComment) {
+      var feedbackTargF = $("#feedback_target_field")[0].value;
+      if (feedbackTargF && $("#" + feedbackTargF).length>0) {
+        $("#" + feedbackTargF)[0].value = feedbackComment;
+      }
+      $('#feedbackModal').modal('hide');
+    }
+  });
+  //set focus to feedback field
+  $('#feedbackModal')[0].FocusFeedbackField = function ()
+  {
+    $("#feedback_comment").focus();
+  }
+  //check if feedback field is empty
+  $('#feedbackModal')[0].FeedbackFieldIsEmpty = function ()
+  {
+    if ($('#feedback_comment')[0].value.length>0)
+     return false;
+    else
+      return true;
+  }
+</script>

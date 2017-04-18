@@ -21,7 +21,6 @@
     </div>
   </div>
 </div>
-<script src="js/bs_modal.js"></script>
 <script>
   //clear up password field and make it focused
   $('#confirmFormModal').on('shown.bs.modal', function() {
@@ -32,7 +31,7 @@
     //$("#password_field").focus();
   })
   //define property to set modal confirm function
-  $('#confirmFormModal')[0].Modal_confirm_func = function (func)
+  $('#confirmFormModal')[0].ModalConfirmFunc = function (func)
   {
     let ev = $._data(document.getElementById("modal_confirm_button"), 'events');
     if (typeof func === 'function')
@@ -42,13 +41,13 @@
       $('#modal_confirm_button').click(func);
     }
   }
-  //set focus to passwordfield
-  $('#confirmFormModal')[0].Focus_password_field = function ()
+  //set focus to password field
+  $('#confirmFormModal')[0].FocusPasswordField = function ()
   {
     $("#password_field").focus();
   }
   //check if password field is empty
-  $('#confirmFormModal')[0].Password_field_is_empty = function ()
+  $('#confirmFormModal')[0].PasswordFieldIsEmpty = function ()
   {
     if ($('#password_field')[0].value.length>0)
      return false;
