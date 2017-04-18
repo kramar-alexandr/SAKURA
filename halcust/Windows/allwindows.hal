@@ -2141,7 +2141,7 @@ begin
   EditField(h,v+=vs,110,"Сер. номер",St_i,SerialNr,false,SerialNrSClass);
   EditField(h2,v,90,"Цена покуп.",Normal,Value,true,0);
   EditField(h,v+=vs,320,"Наименование",Normal,Name,false,0);
-  EditField(h,v+=vs,50,"Стартовый пробег",Normal,InitMileage,false,0); //Edit***************************Sasha2,14:17 14.04.2017
+  EditField(h,v+=vs,70,"Стартовый пробег",Normal,InitMileage,false,0); //Edit***************************Sasha2,14:17 14.04.2017
   CheckBox(460,v=10,0,"Закрыт",Terminated);
   CheckBox(460,v+=20,0,"Структура",RecepyItem);
   TileButton(1,"Аксессуары");
