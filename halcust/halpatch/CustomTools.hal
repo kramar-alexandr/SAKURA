@@ -62,8 +62,9 @@ begin
 	//record AgreeTypeVc AgreeTyper; //Тип начисления для аренды
 
 	//модуль Активы (assets module)
-	/*
+	
 	record AT2UnitVc AT2Unitr; //Активы
+	/*
 	record AT2Vc AT2r; //Категории активов
 	record AT2WrofVc AT2Wrofr; //Выбытие активов
 	record AT2DprVc AT2Dprr; //Переоценка активов
@@ -631,6 +632,15 @@ begin
 	  end;
 	end;
 	*/
+	
+	TrHs = true;
+	while (LoopMain(AT2Unitr,1,TrHs)) begin
+	  if (TrHs) then begin
+	    RecordDelete(AT2Unitr);
+	    StepBack(AT2Unitr);
+	  end;
+	end;
+	
 
 return;
 end; //Edit***************************Sasha2,11:22 22.09.2016 }
