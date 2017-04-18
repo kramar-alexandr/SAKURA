@@ -17,9 +17,9 @@ begin
 	record POVc POr;
 	record SHVc SHr;
 	record PUVc PUr;
+	record INTransferVc INTransferr;
 	record SDVc SDr;
 	record StockMovVc StockMovr;
-	record InternMovVc InternMovr;
 	record RetVc Retr;
 	record RetPUVc RetPUr;
 	record StockTakeVc StockTaker;
@@ -210,6 +210,14 @@ begin
 	    StepBack(PUr);
 	  end;
 	end;
+	
+	TrHs = true;
+	while (LoopMain(INTransferr,1,TrHs)) begin
+	  if (TrHs) then begin
+	    RecordDelete(INTransferr);
+	    StepBack(INTransferr);
+	  end;
+	end;
 
 	TrHs = true;
 	while (LoopMain(SDr,1,TrHs)) begin
@@ -224,14 +232,6 @@ begin
 	  if (TrHs) then begin
 	    RecordDelete(StockMovr);
 	    StepBack(StockMovr);
-	  end;
-	end;
-	
-	TrHs = true;
-	while (LoopMain(InternMovr,1,TrHs)) begin
-	  if (TrHs) then begin
-	    RecordDelete(InternMovr);
-	    StepBack(InternMovr);
 	  end;
 	end;
 
