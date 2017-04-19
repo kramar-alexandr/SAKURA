@@ -163,7 +163,7 @@
         function Handle_jobFeedback()
         {
           if ($('#jobFeedback')[0].value=="optional" && $('#feedbackModal').length>0) {
-            $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы работой?",$('#jobFeedbackText')[0].value,'jobFeedbackText');
+            $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы работой?",$('#jobTextFeedback')[0].value,'jobTextFeedback');
           }
         }
         $('#jobFeedback').change(Handle_jobFeedback);
@@ -171,7 +171,7 @@
         function Handle_shiftFeedback()
         {
           if ($('#shiftFeedback')[0].value=="optional" && $('#feedbackModal').length>0) {
-            $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы пересменкой?",$('#shiftFeedbackText')[0].value,'shiftFeedbackText');
+            $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы пересменкой?",$('#shiftTextFeedback')[0].value,'shiftTextFeedback');
           }
         }
         $('#shiftFeedback').change(Handle_shiftFeedback);
@@ -281,7 +281,7 @@
           </div>
           <legend class="label-default">Обратная связь</legend>
           <div class="form-group">
-            <input type="hidden" name="jobFeedbackText" id="jobFeedbackText">
+            <input type="hidden" name="jobTextFeedback" id="jobTextFeedback">
             <label class="label-default col-md-12" for="jobFeedback">Довольны ли Вы работой</label>
             <select class="form-control" name="jobFeedback" id="jobFeedback">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
@@ -289,7 +289,7 @@
               <option value="no">Нет</option>
               <option value="optional">Другое</option>
             </select><br><br>
-            <input type="hidden" name="shiftFeedbackText" id="shiftFeedbackText">
+            <input type="hidden" name="shiftTextFeedback" id="shiftTextFeedback">
             <label class="label-default col-md-12" for="shiftFeedback">Довольны ли Вы пересменкой</label>
             <select class="form-control" name="shiftFeedback" id="shiftFeedback">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
@@ -407,7 +407,7 @@
         $('#jobFeedback').focus();
         return;
       }
-      if($('#jobFeedback')[0].value=='optional' && $('#jobFeedbackText')[0].value=='')
+      if($('#jobFeedback')[0].value=='optional' && $('#jobTextFeedback')[0].value=='')
       {
         $('html,body').animate({scrollTop: $('#jobFeedback').offset().top - 150});
         $('#jobFeedback').focus();
@@ -420,7 +420,7 @@
         $('#shiftFeedback').focus();
         return;
       }
-      if($('#shiftFeedback')[0].value=='optional' && $('#shiftFeedbackText')[0].value=='')
+      if($('#shiftFeedback')[0].value=='optional' && $('#shiftTextFeedback')[0].value=='')
       {
         $('html,body').animate({scrollTop: $('#shiftFeedback').offset().top - 150});
         $('#shiftFeedback').focus();
