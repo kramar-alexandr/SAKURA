@@ -2757,11 +2757,19 @@ select[multiple].input-lg {
   height: auto;
 }
 .form-group-lg .form-control {
-  height: 100px;
+  height: 100px; /*modified by developer*/
   padding: 10px 16px;
-  font-size: 64px;
+  font-size: 64px; /*modified by developer*/
   line-height: 1.3333333;
   border-radius: 6px;
+}
+.form-group-lg .form-control-emphasized{ /*Added by developer*/
+  height:150px;
+  font-size: 120px;
+  font-weight: bold;
+  color: black;
+  background-color: #ead535;
+  border: 5px inset red;
 }
 .form-group-lg select.form-control {
   height: 100px;

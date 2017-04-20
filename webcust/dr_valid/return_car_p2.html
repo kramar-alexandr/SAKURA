@@ -162,7 +162,7 @@
 
         function Handle_jobFeedback()
         {
-          if ($('#jobFeedback')[0].value=="optional" && $('#feedbackModal').length>0) {
+          if ($('#feedbackModal').length>0  && $('#jobFeedback')[0].value=="optional") {
             $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы работой?",$('#jobTextFeedback')[0].value,'jobTextFeedback');
           }
         }
@@ -170,7 +170,7 @@
 
         function Handle_shiftFeedback()
         {
-          if ($('#shiftFeedback')[0].value=="optional" && $('#feedbackModal').length>0) {
+          if ($('#feedbackModal').length>0 && $('#shiftFeedback')[0].value=="optional") {
             $('#feedbackModal')[0].ModalFeedbackShow("Довольны ли Вы пересменкой?",$('#shiftTextFeedback')[0].value,'shiftTextFeedback');
           }
         }
@@ -277,7 +277,7 @@
             <label class="label-default col-md-12" for="cashbox_for_pay">Касса для расчета</label>
             <input class="form-control" type="number" id="cashbox_for_pay" name="cashbox_for_pay" readonly/><br>
             <label class="label-default col-md-12" for="cash_for_driver">Сумма выплаты водителю</label>
-            <input class="form-control" type="number" id="cash_for_driver" name="cash_for_driver" readonly/><br>
+            <input class="form-control form-control-emphasized" type="number" id="cash_for_driver" name="cash_for_driver" readonly/><br>
           </div>
           <legend class="label-default">Обратная связь</legend>
           <div class="form-group">
