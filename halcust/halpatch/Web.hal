@@ -89,30 +89,34 @@ begin
     BlockLoad(RCr);
     mesg = "";
     
-    RentBookr.CustCode = driverCode;
-    if (ReadLastKey("CustCode",RentBookr,1,true)) then begin
-      switch (action) begin
-        case "dispatch":
-          if (RentBookr.AgreeStatus==RCr.AgreeStatusCreated) then begin
-            serNr = RentBookr.SerNr;
-            foundF = true;
-          end;
-        case "return":
-          if (RentBookr.AgreeStatus==RCr.AgreeStatusDelivered) then begin
-            serNr = RentBookr.SerNr;
-            foundF = true;
-          end;
-      end;
-      if (foundF==false) then begin
-        mesg = "Статус резервирования авто неподходящий";
-      end;
-      if (RentBookr.AgreeStatus==RCr.AgreeStatusReturned or RentBookr.AgreeStatus==RCr.AgreeStatusDone) then begin
+    if (NonBlank(driverCode)) then begin
+      RentBookr.CustCode = driverCode;
+      if (ReadLastKey("CustCode",RentBookr,1,true)) then begin
+        switch (action) begin
+          case "dispatch":
+            if (RentBookr.AgreeStatus==RCr.AgreeStatusCreated) then begin
+              serNr = RentBookr.SerNr;
+              foundF = true;
+            end;
+          case "return":
+            if (RentBookr.AgreeStatus==RCr.AgreeStatusDelivered) then begin
+              serNr = RentBookr.SerNr;
+              foundF = true;
+            end;
+        end;
+        if (foundF==false) then begin
+          mesg = "Статус резервирования авто неподходящий";
+        end;
+        if (RentBookr.AgreeStatus==RCr.AgreeStatusReturned or RentBookr.AgreeStatus==RCr.AgreeStatusDone) then begin
+          mesg = "Авто не зарезервировано для водителя с кодом " & driverCode;
+        end;
+      end else begin
         mesg = "Авто не зарезервировано для водителя с кодом " & driverCode;
       end;
     end else begin
-      mesg = "Авто не зарезервировано для водителя с кодом " & driverCode;
+      mesg = "Не определен код водителя";
     end;
-  
+
   GetRentResForDriver = serNr;
  return;
 end;
@@ -272,6 +276,7 @@ begin
         mileage = -1;
         while (LoopBackKey("Code",prevRentResr,2,TrHs)) begin
           testf = true;
+          if (prevRentResr.Code!=RentResr.Code or prevRentResr.SerialNr!=RentResr.SerialNr) then begin TrHs = false; testf = false; end;
           if (RentResr.SerNr==prevRentResr.SerNr) then begin testf = false; end;
           if (testf) then begin
             recCnt = recCnt + 1;

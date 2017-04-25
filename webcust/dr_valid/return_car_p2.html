@@ -7,6 +7,7 @@
     <link rel="stylesheet" media="screen" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/jquery.signaturepad.css">
     <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/numeric-1.2.6.min.js"></script>
     <script src="js/bezier.js"></script>
     <script src="js/jquery.signaturepad.js"></script>
@@ -285,7 +286,7 @@
             <label class="label-default col-md-12" for="jobFeedback">Довольны ли Вы работой</label>
             <select class="form-control" name="jobFeedback" id="jobFeedback">
               <option value="blankvalue" disabled selected value> -- сделайте выбор -- </option>
-              <option value="yes">Да</option>
+              <option class="JobFeedbackOption" value="yes">Да</option>
               <option value="no">Нет</option>
               <option value="optional">Другое</option>
             </select><br><br>
@@ -454,8 +455,7 @@
         xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         var data = {};
         data.p = $("#password_field")[0].value;
-        var json = JSON.stringify(data);
-        xhr.send(json);
+        xhr.send(JSON.stringify(data));
       }
       else {
         $(confirmModalName)[0].FocusPasswordField();
